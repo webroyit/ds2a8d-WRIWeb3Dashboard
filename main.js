@@ -4,6 +4,14 @@ console.log("hello");
 Moralis.initialize("ntozI14MGOaGCCPaTsw5ZzKyqzzO8wcpMzalWpLQ");
 Moralis.serverURL = "https://9qnksoon7okz.usemoralis.com:2053/server";
 
+let homepage = "http://127.0.0.1:5500/index.html";
+
+// Check if the user is login
+if(Moralis.User.current() == null && window.location.href != homepage){
+    document.querySelector('body').style.display = 'none';
+    window.location.href = "index.html";
+}
+
 login = async () => {
     await Moralis.Web3.authenticate().then(async function (user) {
         console.log(Moralis.User.current());
