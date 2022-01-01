@@ -30,9 +30,24 @@ logout = async () => {
     window.location.href = "index.html";
 }
 
+getTransactions = async () => {
+    console.log('get transactions');
+
+   // Get BSC native balance for a given address
+    const options = { chain: "bsc testnet", address: "0xC96F589D5E3359E2c742e726b49ea2beb983CD7F" };
+    const transactions = await Moralis.Web3API.account.getTransactions(options);
+
+    console.log(transactions);
+}
+
 if(document.querySelector('#btn-login') != null){
     document.querySelector('#btn-login').onclick = login;
 }
+
 if(document.querySelector('#btn-logout') != null){
     document.querySelector('#btn-logout').onclick = logout;
+}
+
+if(document.querySelector('#get-transactions-link') != null){
+    document.querySelector('#get-transactions-link').onclick = getTransactions;
 }
