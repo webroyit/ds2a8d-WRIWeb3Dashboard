@@ -33,8 +33,8 @@ logout = async () => {
 getTransactions = async () => {
     console.log('get transactions');
 
-   // Get BSC native balance for a given address
-    const options = { chain: "bsc testnet", address: "0xC96F589D5E3359E2c742e726b49ea2beb983CD7F" };
+   // Get Rinkeby native balance for a given address
+    const options = { chain: "rinkeby", address: "" };
     const transactions = await Moralis.Web3API.account.getTransactions(options);
 
     console.log(transactions);
@@ -63,8 +63,16 @@ getTransactions = async () => {
         transactions.result.forEach(t => {
             let content = `
                 <tr>
-                    <td>${t.hash}</td>
-                    <td>${t.block_number}</td>
+                    <td>
+                        <a href="https://rinkeby.etherscan.io/tx/${t.hash}" target="_blank" rel="noopener noreferrer">
+                            ${t.hash}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="https://rinkeby.etherscan.io/block/${t.block_number}" target="_blank" rel="noopener noreferrer">
+                            ${t.block_number}
+                        </a>
+                    </td>
                     <td>${t.block_timestamp}</td>
                     <td>${t.from_address}</td>
                     <td>${(t.gas * t.gas_price) / 1e18.toFixed(5)} ETH</td>
