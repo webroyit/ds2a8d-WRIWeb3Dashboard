@@ -38,6 +38,43 @@ getTransactions = async () => {
     const transactions = await Moralis.Web3API.account.getTransactions(options);
 
     console.log(transactions);
+
+    if(transactions.total > 0){
+        let table = `
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Transaction</th>
+                        <th scope="col">Block Number</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Fee</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody id="theTrasactions">
+                </tbody>
+            </table>
+        `;
+
+        // Inject this table inside the HTML of the dashboard
+        document.querySelector("#tableOfTransactions").innerHTML = table;
+
+        transactions.result.forEach(t => {
+            let content = `
+                <tr>
+                    <td>${t.hash}</td>
+                    <td>${t.block_number}</td>
+                    <td>${t.block_timestamp}</td>
+                    <td>${t.from_address}</td>
+                    <td>${(t.gas * t.gas_price) / 1e18.toFixed(5)} ETH</td>
+                    <td>${(t.value / 1e18).toFixed(5)} ETH</td>
+                </tr>
+            `;
+
+            theTrasactions.innerHTML += content;
+        });
+    }
 }
 
 if(document.querySelector('#btn-login') != null){
