@@ -34,7 +34,7 @@ getTransactions = async () => {
     console.log('get transactions');
 
    // Get Rinkeby native balance for a given address
-    const options = { chain: "rinkeby", address: "" };
+    const options = { chain: "rinkeby", address: "0xa7a82DD06901F29aB14AF63faF3358AD101724A8", limit: 50 };
     const transactions = await Moralis.Web3API.account.getTransactions(options);
 
     console.log(transactions);
@@ -73,7 +73,7 @@ getTransactions = async () => {
                             ${t.block_number}
                         </a>
                     </td>
-                    <td>${t.block_timestamp}</td>
+                    <td>${millisecondsToTime(Date.parse(new Date()) - Date.parse(t.block_timestamp))}</td>
                     <td>${t.from_address}</td>
                     <td>${(t.gas * t.gas_price) / 1e18.toFixed(5)} ETH</td>
                     <td>${(t.value / 1e18).toFixed(5)} ETH</td>
@@ -83,6 +83,28 @@ getTransactions = async () => {
             theTrasactions.innerHTML += content;
         });
     }
+}
+
+// Convert milliseconds to time
+// Currenttime(ms) - Blocktime(ms) = TIME IN MILL
+millisecondsToTime = (ms) => {
+    let mintues = Math.floor(ms / (1000 * 60));
+    let hours = Math.floor(ms / (1000 * 60 * 60));
+    let days = Math.floor(ms / (1000 * 60 * 60 * 24));
+
+    if(days < 1){
+        if(hours < 1){
+            if(mintues < 1){
+                return `less than a minute ago`
+            }
+            // Return as mintues
+            else return `${mintues} mintues(s) ago` 
+        }
+        // Return as hours
+        else return `${hours} hours(s) ago`
+    }
+    // Return as days
+    else return `${days} days(s) ago`
 }
 
 if(document.querySelector('#btn-login') != null){
