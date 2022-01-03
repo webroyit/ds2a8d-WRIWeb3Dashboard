@@ -74,7 +74,7 @@ getTransactions = async () => {
                         </a>
                     </td>
                     <td>${millisecondsToTime(Date.parse(new Date()) - Date.parse(t.block_timestamp))}</td>
-                    <td>${t.from_address}</td>
+                    <td>${t.from_address == Moralis.User.current().get('ethAddress') ? 'Outgoing': 'Incoming'}</td>
                     <td>${(t.gas * t.gas_price) / 1e18.toFixed(5)} ETH</td>
                     <td>${(t.value / 1e18).toFixed(5)} ETH</td>
                 </tr>
@@ -83,6 +83,44 @@ getTransactions = async () => {
             theTrasactions.innerHTML += content;
         });
     }
+}
+
+getBalances = async () => {
+    console.log('get balances');
+
+    // Get native balance for a given address
+    const ethBalance = await Moralis.Web3API.account.getNativeBalance();
+    const ropstenBalance = await Moralis.Web3API.account.getNativeBalance({ chain: "ropsten"});
+    const rinkebyBalance = await Moralis.Web3API.account.getNativeBalance({ chain: "rinkeby"});
+
+    console.log((ethBalance.balance / 1e18).toFixed(5) + "ETH");
+    console.log((ropstenBalance.balance / 1e18).toFixed(5) + "ETH");
+    console.log((rinkebyBalance.balance / 1e18).toFixed(5) + "ETH");
+
+    let content = document.querySelector('#userBalances').innerHTML = `
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Chain</th>
+                    <th scope="col">Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ether</td>
+                    <td>${(ethBalance.balance / 1e18).toFixed(5)} ETH</td>
+                </tr>
+                <tr>
+                    <td>Ropsten</td>
+                    <td>${(ropstenBalance.balance / 1e18).toFixed(5)} ETH</td>
+                </tr>
+                <tr>
+                    <td>Rinkeby</td>
+                    <td>${(rinkebyBalance.balance / 1e18).toFixed(5)} ETH</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
 }
 
 // Convert milliseconds to time
@@ -117,4 +155,8 @@ if(document.querySelector('#btn-logout') != null){
 
 if(document.querySelector('#get-transactions-link') != null){
     document.querySelector('#get-transactions-link').onclick = getTransactions;
+}
+
+if(document.querySelector('#get-balances-link') != null){
+    document.querySelector('#get-balances-link').onclick = getBalances;
 }
