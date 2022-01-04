@@ -137,7 +137,7 @@ getNFTs = async () => {
             let metadata = JSON.parse(n.metadata);
             let content = `
                 <div class="card col-md-3">
-                    <img src=${defaultImage} class="card-img-top" alt="Item" height=300>
+                    <img src=${fixURL(metadata?.image_url) || defaultImage} class="card-img-top" alt="Item" height=300>
                     <div class="card-body">
                         <h5 class="card-title">${metadata?.name || "No Title"}</h5>
                         <p class="card-text">${metadata?.description || "No Description"}</p>
@@ -170,6 +170,17 @@ millisecondsToTime = (ms) => {
     }
     // Return as days
     else return `${days} days(s) ago`
+}
+
+fixURL = (url) => {
+    if(!url) return null;
+    
+    if(url.startsWith("ipfs")){
+        return "https://ipfs.moralis.io:2053/ipfs/" + url.split("ipfs://").slice(-1);
+    }
+    else{
+        return url + "?format=json";
+    }
 }
 
 if(document.querySelector('#btn-login') != null){
