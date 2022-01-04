@@ -123,6 +123,33 @@ getBalances = async () => {
     `;
 }
 
+getNFTs = async () => {
+    console.log('get NFTs');
+
+    let tableOfNFTs = document.querySelector('#tableOfNFTs');
+
+    let nfts = await Moralis.Web3API.account.getNFTs({ chain: 'rinkeby'});
+    console.log(nfts);
+
+    if(nfts.result.length > 0){
+        nfts.result.forEach(n => {
+            const defaultImage = "https://images.unsplash.com/photo-1577173620446-2f6a70663000?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8Ymxhbmt8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60";
+            let metadata = JSON.parse(n.metadata);
+            let content = `
+                <div class="card col-md-3">
+                    <img src=${defaultImage} class="card-img-top" alt="Item" height=300>
+                    <div class="card-body">
+                        <h5 class="card-title">${metadata?.name || "No Title"}</h5>
+                        <p class="card-text">${metadata?.description || "No Description"}</p>
+                    </div>
+                </div>
+            `;
+
+            tableOfNFTs.innerHTML += content;
+        })
+    }
+}
+
 // Convert milliseconds to time
 // Currenttime(ms) - Blocktime(ms) = TIME IN MILL
 millisecondsToTime = (ms) => {
@@ -159,4 +186,8 @@ if(document.querySelector('#get-transactions-link') != null){
 
 if(document.querySelector('#get-balances-link') != null){
     document.querySelector('#get-balances-link').onclick = getBalances;
+}
+
+if(document.querySelector('#get-nfts-link') != null){
+    document.querySelector('#get-nfts-link').onclick = getNFTs;
 }
